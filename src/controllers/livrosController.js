@@ -2,15 +2,12 @@ import livros from "../models/Livro.js";
 
 class LivroController {
 
-  static listarLivros = async (req, res) => {
+  static listarLivros = async (req, res, next) => {
     try {
       const livrosResultado = await livros.find()
-        .populate("autor")
-        .exec();
-
       res.status(200).json(livrosResultado);
     } catch (erro) {
-      res.status(500).json({ message: "Erro interno no servidor" });
+      next(erro)
     }
   }
 
@@ -28,7 +25,7 @@ class LivroController {
     }
   }
 
-  static cadastrarLivro = async (req, res) => {
+  static cadastrarLivro = async (req, res, next) => {
     try {
       let livro = new livros(req.body);
 
@@ -36,7 +33,7 @@ class LivroController {
 
       res.status(201).send(livroResultado.toJSON());
     } catch (erro) {
-      res.status(500).send({message: `${erro.message} - falha ao cadastrar livro.`});
+        next(erro)
     }
   }
 
@@ -64,7 +61,7 @@ class LivroController {
     }
   }
 
-  static listarLivroPorEditora = async (req, res) => {
+  static listarLivroPorEditora = async (req, res, next) => {
     try {
       const editora = req.query.editora;
 
@@ -72,7 +69,7 @@ class LivroController {
 
       res.status(200).send(livrosResultado);
     } catch (erro) {
-      res.status(500).json({ message: "Erro interno no servidor" });
+      next(erro)
     }
   }
 
